@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Train Scheduler</title>
+	<script src="https://code.jquery.com/jquery.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://www.gstatic.com/firebasejs/3.7.0/firebase.js"></script>
+</head>
+<body>
+<div class="container">
+	<div class="jumbotron">
+		<h1>Train Scheduler</h1><br>
+		<p>Insert an in poor taste "The trains will run on time" joke here</p>
+	</div>
+	
+<!-- Table of Current Trains -->
+	<div class="panel panel-default">
+			<div class="panel-heading">Current Trains</div>
+			<!--table headings -->
+		<div class="panel panel-body">
+			<table class="table table-bordered">		
+				<thead>
+					<tr>
+						<th>Train Name</th>
+						<th>Start Time</th>
+						<th>Arrival Interval (Min)</th>
+						<th>Next Train Time</th>
+						<th>Minutes Away</th>
+					</tr>
+				</thead>
+				<!--Where the entered trains will show up -->
+				<tbody id="table-body">
+					<tr>
+						<td id="name-display"></td>
+						<td id="start-display"></td>
+						<td id="arrival-display"></td>
+						<td id="next-display"></td>
+						<td id="minutes-display"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="panel panel-default">
+			<!--table headings -->
+			<div class="panel-heading">Add Trains</div>
+		<div class="panel panel-body">
+			<div class="form-group">
+				<label for="Train Name">Train Name</label>
+				<input type="Train Name" class="form-control" id="name-input" placeholder="Train Name">
+				<br>
+
+				<label for="Start Time">Start Time</label>
+				<input type="Start Time" class="form-control" id="start-input" placeholder="Start Time">
+				<br>
+
+				<label for="Arrival Interval">Arrival Interval (Min)</label>
+				<input type="Arrival Interval" class="form-control" id="arrival-input" placeholder="Arrival Interval (Min)">
+				<br>
+
+				<button type="submit" class="btn btn-default" id="add-user">Add A Train!</button>
+			</div>
+		</div>
+	</div>
+</div>
+	<script>
+		var config = {
+    apiKey: "AIzaSyAH6ykGHqh8ZMntPA4gFf53BA8BDNdFuMg",
+    authDomain: "click-countdown-58441.firebaseapp.com",
+    databaseURL: "https://click-countdown-58441.firebaseio.com",
+    projectId: "click-countdown-58441",
+    storageBucket: "",
+    messagingSenderId: "596416308797"
+  };
+  firebase.initializeApp(config);
+
+// Create a variable to reference the database
+ var database = firebase.database();
+
+//Variables
+
+var name = ""
+var start = ""
+var arrival = ""
+
+//Watching for submit button click
+
+$("#add-user").on("click", function(event) {
+	event.preventDefault();
+
+//Taking input from text boxes
+name = $("#name-input").val().trim();
+start = $("#start-input").val().trim();
+arrival = $("#arrival-input").val().trim();
+
+// Code for handling the push
+      database.ref().push({
+        name: name,
+        start: start,
+        arrival: arrival,
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
+      });
+
+});
+
+ // Firebase watcher + initial loader + order/limit HINT: .on("child_added"
+    database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
+      // storing the snapshot.val() in a variable for convenience
+      var sv = snapshot.val();
+
+      //Logging user data in the console
+      console.log(sv.name);
+      console.log(sv.start);
+      console.log(sv.arrival);
+     
+      //Changing the html
+      $("#name-display").html(sv.name);
+      $("#start-display").html(sv.start);
+      $("#arrival-display").html(sv.arrival);
+      
+
+       // Handle the errors
+    }, function(errorObject) {
+      console.log("Errors handled: " + errorObject.code);
+    });
+
+	</script>
+
+</body>
+</html>
