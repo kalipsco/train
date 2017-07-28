@@ -1,0 +1,26 @@
+.jumbotron {
+	font-family: Verdana;
+	font-weight: bold;
+	font-variant: small-caps;
+	color: blue;
+	text-align: center;
+	background-image: url("train6.jpg");
+	background-size: 1146px 266px;
+	background-repeat: no-repeat;
+
+}
+
+.panel-heading {
+	background-color: blue;
+	font-family: Verdana;
+	font-variant: small-caps;
+	font-weight: bold;
+	color: black;
+}
+
+#font1, #font2 {
+    font-family: Verdana;
+	font-variant: small-caps;
+	font-weight: bold;
+	color: black	
+}
